@@ -1,3 +1,5 @@
+//find the error in the program 
+
 public class MazeSolver {
     static int[][] maze = {
         {0, 0, 1, 0},

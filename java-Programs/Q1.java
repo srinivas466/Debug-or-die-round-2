@@ -1,3 +1,6 @@
+//identify the errors in the following program and run the program.
+
+
 import java.util.Scanner;
 
 public class BankAccount {
