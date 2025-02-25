@@ -1,30 +1,33 @@
 #include <iostream>
+#include <thread>
 using namespace std;
 
-class Base {
+class LazySingleton {
 public:
-    Base() { cout << "Base constructed" << endl; }
-    
-    ~Base() { cout << "Base destructed" << endl; }
+    static LazySingleton* getInstance() {
+        if (!instance) {          // No synchronization: race condition here!
+            instance = new LazySingleton();
+        }
+        return instance;
+    }
+    void doSomething() { cout << "Doing something." << endl; }
+private:
+    LazySingleton() { cout << "Singleton created." << endl; }
+    static LazySingleton* instance;
 };
 
-class Derived : public Base {
-public:
-    Derived() {
-        data = new int[10];
-        cout << "Derived constructed" << endl;
-    }
-    ~Derived() {
-        delete[] data;
-        cout << "Derived destructed" << endl;
-    }
-private:
-    int* data;
-};
+LazySingleton* LazySingleton::instance = nullptr;
+
+void threadFunc() {
+    LazySingleton::getInstance()->doSomething();
+}
 
 int main() {
-    Base* obj = new Derived();
-    delete obj; 
+    thread t1(threadFunc);
+    thread t2(threadFunc);
+    t1.join();
+    t2.join();
     return 0;
 }
+
 
